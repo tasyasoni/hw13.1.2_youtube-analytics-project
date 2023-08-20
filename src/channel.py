@@ -34,7 +34,7 @@ class Channel:
         return (int(self.subscriber_count) - int(other.subscriber_count))
 
 
-        def __gt__(self, other):
+    def __gt__(self, other):
             return self.subscriber_count > other.subscriber_count
 
 
