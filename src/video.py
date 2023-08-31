@@ -13,14 +13,26 @@ class Video:
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
-        self.channel_id = channel_id
-        self.channel_info = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                           id=self.channel_id
-                                           ).execute()
-        self.title = self.channel_info['items'][0]['snippet']['title']
-        self.url = f"https://www.youtube.com/channel/{self.channel_id}"
-        self.view_count = self.channel_info['items'][0]['statistics']['viewCount']
-        self.like_count = self.channel_info['items'][0]['statistics']['likeCount']
+        try:
+            if any(map(str.isdigit, channel_id)):
+                self.channel_id = channel_id
+            else:
+                self.channel_info = None
+                self.title = None
+                self.url = None
+                self.view_count = None
+                self.like_count = None
+                raise ValueError
+        except ValueError:
+            print("Неверный ID")
+        else:
+            self.channel_info = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                            id=self.channel_id
+                                            ).execute()
+            self.title = self.channel_info['items'][0]['snippet']['title']
+            self.url = f"https://www.youtube.com/channel/{self.channel_id}"
+            self.view_count = self.channel_info['items'][0]['statistics']['viewCount']
+            self.like_count = self.channel_info['items'][0]['statistics']['likeCount']
 
 
     def __str__(self):
